@@ -48,7 +48,16 @@ CONF_FLAGS=(
   src/fftools/ffmpeg_hw.c 
   src/fftools/ffmpeg_mux.c 
   src/fftools/ffmpeg_opt.c 
+  src/fftools/ffmpeg_sched.c
+  src/fftools/sync_queue.c
+  src/fftools/thread_queue.c
+  src/fftools/objpool.c
   src/fftools/opt_common.c 
+  src/fftools/ffmpeg_dec.c 
+  src/fftools/ffmpeg_enc.c 
+  src/fftools/ffmpeg_demux.c 
+  src/fftools/ffmpeg_mux_init.c 
+  -pthread
 )
 
 emcc "${CONF_FLAGS[@]}" $@
