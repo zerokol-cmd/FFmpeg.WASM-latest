@@ -19,6 +19,12 @@ ENV FFMPEG_MT=$FFMPEG_MT
 RUN apt-get update && \
       apt-get install -y pkg-config autoconf automake libtool ragel
 
+# Build fdk-aac
+FROM emsdk-base AS fdkaac-builder
+ENV X265_BRANCH=3.4
+ADD https://github.com/mstorsjo/fdk-aac.git /src
+COPY build/fdkaac.sh /src/build.sh
+RUN bash -x /src/build.sh
 # Build x264
 FROM emsdk-base AS x264-builder
 ENV X264_BRANCH=4-cores
@@ -135,6 +141,7 @@ RUN bash -x /src/build.sh
 FROM emsdk-base AS ffmpeg-base
 RUN embuilder build sdl2 sdl2-mt
 ADD https://github.com/FFmpeg/FFmpeg.git /src
+COPY --from=fdkaac-builder $INSTALL_DIR $INSTALL_DIR
 COPY --from=x264-builder $INSTALL_DIR $INSTALL_DIR
 COPY --from=x265-builder $INSTALL_DIR $INSTALL_DIR
 COPY --from=libvpx-builder $INSTALL_DIR $INSTALL_DIR
@@ -151,6 +158,7 @@ FROM ffmpeg-base AS ffmpeg-builder
 COPY build/ffmpeg.sh /src/build.sh
 RUN bash -x /src/build.sh \
       --enable-gpl \
+      --enable-nonfree \ 
       --enable-libx264 \
       --enable-libx265 \
       --enable-libvpx \
@@ -163,7 +171,8 @@ RUN bash -x /src/build.sh \
       --enable-libfreetype \
       --enable-libfribidi \
       --enable-libass \
-      --enable-libzimg 
+      --enable-libzimg \
+      --enable-libfdk-aac
 
 # Build ffmpeg.wasm
 FROM ffmpeg-builder AS ffmpeg-wasm-builder
@@ -190,7 +199,8 @@ ENV FFMPEG_LIBS \
       -lfribidi \
       -lharfbuzz \
       -lass \
-      -lzimg
+      -lzimg \
+      -lfdk-aac
 RUN mkdir -p /src/dist/umd && bash -x /src/build.sh \
       ${FFMPEG_LIBS} \
       -o dist/umd/ffmpeg-core.js
