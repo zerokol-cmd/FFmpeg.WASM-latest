@@ -4,8 +4,14 @@
   </a>
 </p>
 
-# ffmpeg.wasm
-
+# ffmpeg.wasm (latest) a fork of ffmpeg.wasm with latest ffmpeg under the hood ⚡
+## Limitations
+Because of spectre vulnerability, all major browsers removed support for `SharedArrayBuffer` which is needed for ffmpeg.wasm-latest. In order to enable SharedArrayBuffer you have to send responses with special HTTP headers:
+| Header                       | Value        |
+|------------------------------|--------------|
+| Cross-Origin-Opener-Policy   | same-origin  |
+| Cross-Origin-Embedder-Policy | require-corp |
+## Original readme
 ffmpeg.wasm is a pure Webassembly / Javascript port of FFmpeg. It enables video & audio record, convert and stream right inside browsers.
 
 [![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
@@ -18,7 +24,6 @@ ffmpeg.wasm is a pure Webassembly / Javascript port of FFmpeg. It enables video 
 [![Downloads Month](https://img.shields.io/npm/dm/@ffmpeg/ffmpeg.svg)](https://www.npmjs.com/package/@ffmpeg/ffmpeg)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/1943b6d3-45ad-4b46-bfba-cb8d5716604c/deploy-status)](https://app.netlify.com/sites/ffmpegwasm/deploys)
 
-Join us on Discord!
 
 [![Discord](https://dcbadge.vercel.app/api/server/NjGMaqqfm5)](https://discord.gg/NjGMaqqfm5)
 
